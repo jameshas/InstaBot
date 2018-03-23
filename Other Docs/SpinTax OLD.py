@@ -1,0 +1,55 @@
+import re
+import random
+
+def _replace_string(match):
+    """
+    Function to replace the spintax with a randomly chosen string
+    :param match object:
+    :return string:
+    """
+    global spintax_seperator, random_string
+    test_string = re.sub(spintax_seperator, lambda x: x.group(1)+random_string, match.group(2))
+    random_picked = random.choice(re.split(random_string, test_string))
+    return match.group(1) + random_picked + match.group(3)
+
+
+def spin(string):
+    """
+    Function used to spin the spintax string
+    :param string:
+    :param seed:
+    :return string:
+    """
+
+    # As look behinds have to be a fixed width I need to do a "hack" where
+    # a temporary string is used. This string is randomly chosen. There are
+    # 1.9e62 possibilities for the random string and it uses uncommon Unicode
+    # characters, that is more possibilerties than number of Planck times that
+    # have passed in the universe so it is safe to do.
+    characters = [chr(x) for x in range(1234, 1368)]    
+    global random_string
+    random_string = ''.join(random.sample(characters, 30))
+
+    # Regex to find spintax seperator, defined here so it is not re-defined
+    # on every call to _replace_string function
+    global spintax_seperator
+    spintax_seperator = r'((?:(?<!\\)(?:\\\\)*))(\|)'
+    spintax_seperator = re.compile(spintax_seperator)
+
+    # Regex to find all non escaped spintax brackets
+    spintax_bracket = r'(?<!\\)((?:\\{2})*)\{([^}{}]+)(?<!\\)((?:\\{2})*)\}'
+    spintax_bracket = re.compile(spintax_bracket)
+
+    # Need to iteratively apply the spinning because of nested spintax
+    while True:
+        new_string = re.sub(spintax_bracket, _replace_string, string)
+        if new_string == string:
+            break
+        string = new_string
+
+    # Replaces the literal |, {,and }.
+    string = re.sub(r'\\([{}|])', r'\1', string)
+    # Removes double \'s
+    string = re.sub(r'\\{2}', r'\\', string)
+
+    return string

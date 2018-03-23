@@ -1,0 +1,45 @@
+Method 1: Engage by Recent Tag Media
+  Array of Tags to Crawl Media
+    Get Most Recent Tag Media
+      Check Media Engagement Suitability
+        Engage with Suitable Media
+          Check Media Poster Follow Suitability
+            Follow Suitable Media Poster
+
+Method 2: Engage by Recent User Media
+  Max follows per User before moving to next
+  Array of Users to check Media
+  -Loop Users
+    Get User Media (Sorted from most recent to oldest)
+      Get Likers of Most Recent Media
+      -Loop Likers
+        Check Liker for Follow Suitability
+          Follow Suitable Liker
+
+      if end of likers reached before reaching max follows per user before moving to next
+        Go to next media of same user
+          Get likers etc.
+
+Method 3: Engage by User Followers
+  Array of Users to Crawl Followers
+    Get Followers of User
+      Check Followers Follow Suitability
+        Follow Suitable Follower
+
+
+
+
+Follow Delay
+Follow Suitable Liker
+
+Unfollow / Follow Delay
+Unfollow Older Following (loginUserFollowing[0])
+
+
+Be able to adjust Follow and Unfollow amount independently (ie. 600 follows, 200 unfollows a day etc.)
+
+
+If Followings > self.maxFollowing:
+  modeMassUnfollow(diff) type 3
+else
+  follow media likers
